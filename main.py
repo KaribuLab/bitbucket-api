@@ -1,4 +1,5 @@
 import os
+import uuid
 import requests
 from dotenv import load_dotenv
 
@@ -13,6 +14,36 @@ commit_hash = os.getenv("BITBUCKET_COMMIT")
 workspace_slug = os.getenv("BITBUCKET_WORKSPACE")
 repo_slug = os.getenv("BITBUCKET_REPO_SLUG")
 project_key = os.getenv("BITBUCKET_PROJECT_KEY")
+
+
+def bitbucket_create_code_insights_report(headers, workspace, repo, commit):
+    """Crea un reporte de código en Bitbucket."""
+    url = (
+        f"{BITBUCKET_API_URL}/repositories/{workspace}/{repo}/commit/{commit}/reports/"
+        f"titvo-security-scan-{uuid.uuid4()}"
+    )
+    payload = {
+        "title": "Titvo Security Scan",
+        "details": "Security scan report",
+        "report_type": "SECURITY",
+        "reporter": "titvo-security-scan",
+        "result": "FAILED",
+        "data": [
+            {"title": "Duration in seconds", "type": "DURATION", "value": 14},
+            {
+                "title": "Safe to merge?",
+                "type": "BOOLEAN",
+                "value": False,
+            },
+            {
+                "title": "Vulnerabilities",
+                "type": "NUMBER",
+                "value": 14,
+            },
+        ],
+    }
+    response = requests.post(url, headers=headers, json=payload, timeout=30)
+    return response.json()
 
 
 def download_file(headers, workspace, repo, file_path, commit):
@@ -97,6 +128,7 @@ def main():
             print(
                 f"\nError al obtener los archivos modificados: {diff_response.status_code} - {diff_response.text}"
             )
+        bitbucket_create_code_insights_report(headers, workspace_slug, repo_slug, commit_hash)
     else:
         print(f"No se encontró el commit con hash {commit_hash}")
         print(f"Error: {commit_response.status_code} - {commit_response.text}")

@@ -1,6 +1,6 @@
-# Bitbucket API - Descargador de Archivos
+# Bitbucket API - Descargador de Archivos y Generador de Reportes
 
-Este script permite descargar archivos modificados de un commit específico en un repositorio de Bitbucket Cloud.
+Este script permite descargar archivos modificados de un commit específico en un repositorio de Bitbucket Cloud y generar reportes de seguridad.
 
 ## Requisitos
 
@@ -38,6 +38,10 @@ El script:
 1. Obtendrá la información del commit especificado
 2. Listará los archivos modificados en ese commit
 3. Descargará los archivos en el directorio `repo_files/`
+4. Generará un reporte de seguridad en Bitbucket con métricas como:
+   - Duración del análisis
+   - Estado de seguridad (seguro para merge)
+   - Número de vulnerabilidades encontradas
 
 ## Estructura del Proyecto
 
@@ -55,8 +59,10 @@ El script:
 
 - Los archivos se descargan manteniendo la estructura de directorios original del repositorio
 - Se requiere un token de acceso OAuth2 válido con permisos de lectura al repositorio
+- Los reportes de seguridad se generan automáticamente después de descargar los archivos
 
 ## Referencias
 
 - [Documentación de OAuth en Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/)
-- [Variables y Secretos en Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/) 
+- [Variables y Secretos en Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/)
+- [API de Reportes de Bitbucket Cloud](https://developer.atlassian.com/cloud/bitbucket/rest/api-group-reports/#api-repositories-workspace-repo-slug-commit-commit-reports-reportid-put) 
